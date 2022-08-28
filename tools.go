@@ -2,11 +2,13 @@ package kafcli
 
 import (
 	"fmt"
+	"golang.org/x/sys/execabs"
 	"io/ioutil"
 	"math/rand"
 	"os"
 	"os/exec"
 	"path"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -30,7 +32,10 @@ func run(command string, args ...string) error {
 
 func lookKindlegen() string {
 	command := "kindlegen"
-	kindlegen, err := exec.LookPath(command)
+	if runtime.GOOS == "windows" {
+		command = "kindlegen.exe"
+	}
+	kindlegen, err := execabs.LookPath(command)
 	if err != nil {
 		currentDir, err := os.Executable()
 		if err != nil {
